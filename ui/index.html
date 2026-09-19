@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MITRA — mental wellness companion</title>
+<style>
+  :root{
+    --paper:#EDF0EE; --card:#F8FAF9; --ink:#15211E; --muted:#5C6B66;
+    --line:#D3DCD8; --pine:#2D5F53; --pine-soft:#DCE8E3;
+    --dusk:#5A6E8C; --amber:#9A6510; --alert:#8E3B3B;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --paper:#111917; --card:#18221F; --ink:#E8EEEB; --muted:#93A5A0;
+           --line:#28352F; --pine:#7FB8A6; --pine-soft:#1E2E29;
+           --dusk:#9AAFCC; --amber:#D9A441; --alert:#D98C8C; }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:16px/1.55 "Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 40px;
+        display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:22px}
+  @media (max-width:900px){ .wrap{grid-template-columns:1fr} }
+
+  header.top{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+             padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:4px}
+  .mark{font:700 27px/1 "Iowan Old Style","Palatino Linotype",Georgia,serif;
+        letter-spacing:.01em}
+  .sub{color:var(--muted);font-size:14px}
+  .backend{margin-left:auto;font-size:12.5px;color:var(--muted);
+           border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
+
+  /* conversation */
+  #log{padding:20px;height:min(60vh,540px);overflow-y:auto;display:flex;
+       flex-direction:column;gap:16px;scroll-behavior:smooth}
+  .turn{max-width:86%;}
+  .turn.user{align-self:flex-end;text-align:right}
+  .bubble{display:inline-block;padding:12px 15px;border-radius:13px;text-align:left}
+  .user .bubble{background:var(--pine);color:#F6FBF9;border-bottom-right-radius:4px}
+  .bot .bubble{background:transparent;border:1px solid var(--line);
+               border-bottom-left-radius:4px;
+               font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+               font-size:16.5px;line-height:1.62}
+  .bot.crisis .bubble{border-color:var(--alert);background:rgba(142,59,59,.06)}
+  .who{font-size:11.5px;color:var(--muted);margin-bottom:5px;letter-spacing:.02em}
+  .bubble p{margin:0 0 .65em} .bubble p:last-child{margin:0}
+  .chips{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11.5px;color:var(--muted);border:1px solid var(--line);
+        border-radius:999px;padding:2px 9px}
+  .res{margin-top:10px;border-left:3px solid var(--alert);padding:6px 0 6px 11px;
+       font-size:14px}
+  .res b{display:block;font-weight:600}
+  .res a{color:inherit}
+
+  /* composer */
+  .composer{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line)}
+  textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:11px;
+           padding:11px 13px;font:inherit;background:var(--paper);color:var(--ink);
+           min-height:52px;max-height:150px}
+  textarea:focus{outline:2px solid var(--pine);outline-offset:1px}
+  button{font:inherit;cursor:pointer;border-radius:11px;border:1px solid transparent;
+         padding:11px 18px;background:var(--pine);color:#F6FBF9;font-weight:600}
+  button.ghost{background:transparent;border-color:var(--line);color:var(--ink);
+               font-weight:500;padding:7px 12px;font-size:13.5px;border-radius:9px}
+  button:disabled{opacity:.5;cursor:default}
+  .quick{display:flex;gap:7px;flex-wrap:wrap;padding:0 14px 14px}
+
+  /* inspector */
+  aside section{padding:15px 17px;border-bottom:1px solid var(--line)}
+  aside section:last-child{border-bottom:0}
+  h2{font:600 12.5px/1.2 inherit;letter-spacing:.05em;color:var(--muted);
+     margin:0 0 11px;text-transform:none}
+  .meter{height:7px;border-radius:99px;background:var(--pine-soft);overflow:hidden}
+  .meter i{display:block;height:100%;background:var(--pine);width:0;
+           transition:width .5s ease,background .3s}
+  .band{display:flex;justify-content:space-between;font-size:12.5px;
+        color:var(--muted);margin-top:7px}
+  .bandval{font-weight:600;color:var(--ink)}
+  .trace{font:12.5px/1.5 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+         max-height:210px;overflow-y:auto}
+  .trace div{padding:3px 0;border-bottom:1px dotted var(--line);display:flex;gap:8px}
+  .trace div:last-child{border:0}
+  .trace b{color:var(--pine);font-weight:600;min-width:98px}
+  .trace span{color:var(--muted)}
+  .spark{display:flex;align-items:flex-end;gap:4px;height:58px}
+  .spark i{flex:1;background:var(--pine);border-radius:3px 3px 0 0;min-height:3px;
+           opacity:.8}
+  .empty{color:var(--muted);font-size:13.5px}
+  .tools li{font-size:13.5px;margin-bottom:5px}
+  .tools{margin:0;padding-left:18px}
+  footer{grid-column:1/-1;margin-top:6px;font-size:12.5px;color:var(--muted);
+         line-height:1.6}
+  .typing i{display:inline-block;width:6px;height:6px;border-radius:50%;
+            background:var(--muted);margin-right:3px;animation:b 1.1s infinite}
+  .typing i:nth-child(2){animation-delay:.18s}
+  .typing i:nth-child(3){animation-delay:.36s}
+  @keyframes b{0%,60%,100%{opacity:.25}30%{opacity:1}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="mark">MITRA</span>
+    <span class="sub">a place to put it into words &middot; not a medical service</span>
+    <span class="backend" id="backend">connecting…</span>
+  </header>
+
+  <main class="panel">
+    <div id="log" aria-live="polite" aria-label="Conversation"></div>
+    <div class="quick">
+      <button class="ghost" data-q="I've been feeling really overwhelmed with everything this week.">feeling overwhelmed</button>
+      <button class="ghost" data-q="I think I'm a failure, I always mess things up.">stuck in a thought</button>
+      <button class="ghost" data-q="Can you help me calm down? My heart is racing.">need to calm down</button>
+      <button class="ghost" data-q="I want to log my mood, today is about a 4.">log my mood</button>
+      <button class="ghost" id="wipe">erase this session</button>
+    </div>
+    <form class="composer" id="form">
+      <textarea id="input" placeholder="Whatever's on your mind — take your time." rows="1"></textarea>
+      <button id="send" type="submit">Send</button>
+    </form>
+  </main>
+
+  <aside class="panel">
+    <section>
+      <h2>Triage state</h2>
+      <div class="meter"><i id="bar"></i></div>
+      <div class="band">
+        <span>risk band <span class="bandval" id="band">—</span></span>
+        <span>score <span class="bandval" id="score">0.00</span></span>
+      </div>
+      <div class="band">
+        <span>intent <span class="bandval" id="intent">—</span></span>
+        <span>feelings <span class="bandval" id="emo">—</span></span>
+      </div>
+    </section>
+    <section>
+      <h2>Agent trace (last turn)</h2>
+      <div class="trace" id="trace"><div class="empty">Send a message to see which agents run.</div></div>
+    </section>
+    <section>
+      <h2>Tools invoked</h2>
+      <ul class="tools" id="tools"><li class="empty">None yet.</li></ul>
+    </section>
+    <section>
+      <h2>Mood check-ins</h2>
+      <div class="spark" id="spark"><span class="empty">No entries logged.</span></div>
+    </section>
+  </aside>
+
+  <footer>
+    MITRA is a student mini-project built for the Agentic AI &amp; Automation course. It cannot
+    diagnose, treat or prescribe, and it is not a crisis service. If you are in danger, call
+    <b>Tele-MANAS 14416</b> (free, 24&times;7) or emergency services on <b>112</b>.
+    Conversation notes are stored only on this machine and can be erased at any time.
+  </footer>
+</div>
+
+<script>
+const API = location.origin;
+let sessionId = localStorage.getItem("mitra_session") || null;
+const $ = id => document.getElementById(id);
+const log = $("log");
+
+function esc(s){ return s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function paras(t){ return esc(t).split(/\n\n+/).map(p => "<p>"+p.replace(/\n/g,"<br>")+"</p>").join(""); }
+
+function addTurn(role, text, meta){
+  const wrap = document.createElement("div");
+  wrap.className = "turn " + (role === "user" ? "user" : "bot")
+                 + (meta && meta.escalated ? " crisis" : "");
+  let html = '<div class="who">'+(role === "user" ? "you" : "mitra")+'</div>'
+           + '<div class="bubble">'+paras(text)+'</div>';
+  if (meta && meta.chips && meta.chips.length)
+    html += '<div class="chips">'+meta.chips.map(c => '<span class="chip">'+esc(c)+'</span>').join("")+'</div>';
+  if (meta && meta.resources && meta.resources.length)
+    html += '<div class="res">'+meta.resources.slice(0,4).map(r =>
+      '<b>'+esc(r.name)+'</b>'+esc(r.contact)).join("<br>")+'</div>';
+  wrap.innerHTML = html;
+  log.appendChild(wrap);
+  log.scrollTop = log.scrollHeight;
+  return wrap;
+}
+
+function typing(){
+  const d = document.createElement("div");
+  d.className = "turn bot";
+  d.innerHTML = '<div class="who">mitra</div><div class="bubble typing"><i></i><i></i><i></i></div>';
+  log.appendChild(d); log.scrollTop = log.scrollHeight; return d;
+}
+
+function paint(r){
+  const colours = { supportive:"var(--pine)", elevated:"var(--amber)", crisis:"var(--alert)" };
+  $("bar").style.width = Math.round(r.risk_score*100)+"%";
+  $("bar").style.background = colours[r.risk_level] || "var(--pine)";
+  $("band").textContent = r.risk_level;
+  $("score").textContent = r.risk_score.toFixed(2);
+  $("intent").textContent = r.intent;
+  $("emo").textContent = (r.emotions||[]).join(", ") || "—";
+
+  $("trace").innerHTML = (r.trace||[]).map(t =>
+    '<div><b>'+esc(t.agent.replace("Agent",""))+'</b><span>'+esc(t.action)
+    + (t.detail ? " · "+esc(t.detail) : "")
+    + (t.ms ? " · "+t.ms+"ms" : "")+'</span></div>').join("")
+    || '<div class="empty">no trace</div>';
+
+  $("tools").innerHTML = (r.tools_used||[]).length
+    ? r.tools_used.map(t => "<li><b>"+esc(t.name)+"</b> — "+esc((t.display||"").slice(0,110))+"</li>").join("")
+    : '<li class="empty">No tool was needed for that turn.</li>';
+}
+
+async function refreshMoods(){
+  if (!sessionId) return;
+  try {
+    const rep = await (await fetch(API+"/session/"+sessionId+"/report")).json();
+    const moods = rep.moods || [];
+    $("spark").innerHTML = moods.length
+      ? moods.slice(-14).map(m => '<i style="height:'+(m.score*10)+'%" title="'+m.score+'/10"></i>').join("")
+      : '<span class="empty">No entries logged.</span>';
+  } catch(e){}
+}
+
+async function send(text){
+  if (!text.trim()) return;
+  addTurn("user", text);
+  $("send").disabled = true;
+  const t = typing();
+  try {
+    const res = await fetch(API+"/chat", {
+      method:"POST", headers:{"content-type":"application/json"},
+      body: JSON.stringify({ session_id: sessionId, message: text, consent: true })
+    });
+    const data = await res.json();
+    t.remove();
+    sessionId = data.session_id;
+    localStorage.setItem("mitra_session", sessionId);
+    addTurn("assistant", data.reply, {
+      escalated: data.escalated,
+      resources: data.escalated ? data.resources : [],
+      chips: [data.risk_level, data.intent].concat(data.emotions||[])
+    });
+    paint(data);
+    refreshMoods();
+  } catch (err) {
+    t.remove();
+    addTurn("assistant", "I couldn't reach the server just then. If this is urgent, please call Tele-MANAS on 14416 — they are free and open 24×7.");
+  } finally {
+    $("send").disabled = false; $("input").focus();
+  }
+}
+
+$("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("input").value; $("input").value = ""; $("input").style.height = "auto";
+  send(v);
+});
+$("input").addEventListener("input", e => {
+  e.target.style.height = "auto";
+  e.target.style.height = Math.min(150, e.target.scrollHeight) + "px";
+});
+$("input").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); $("form").requestSubmit(); }
+});
+document.querySelectorAll("[data-q]").forEach(b =>
+  b.addEventListener("click", () => send(b.dataset.q)));
+$("wipe").addEventListener("click", async () => {
+  if (!sessionId) return;
+  await fetch(API+"/session/"+sessionId, { method:"DELETE" });
+  localStorage.removeItem("mitra_session"); sessionId = null;
+  log.innerHTML = ""; $("tools").innerHTML = '<li class="empty">None yet.</li>';
+  $("trace").innerHTML = '<div class="empty">Session erased.</div>';
+  $("spark").innerHTML = '<span class="empty">No entries logged.</span>';
+  greet();
+});
+
+function greet(){
+  addTurn("assistant",
+    "Hello — I'm MITRA.\n\nI'm an AI companion, not a counsellor, and I can't diagnose anything. "
+    + "What I can do is listen properly, help you untangle a thought, and point you to real "
+    + "human support when that's what's needed.\n\nWhat's been going on for you today?");
+}
+
+(async () => {
+  try {
+    const h = await (await fetch(API+"/health")).json();
+    $("backend").textContent = "model: " + h.model + (h.offline ? " · offline mode" : "");
+  } catch(e){ $("backend").textContent = "server unreachable"; }
+  greet(); refreshMoods();
+})();
+</script>
+</body>
+</html>

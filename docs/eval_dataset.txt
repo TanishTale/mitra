@@ -1,0 +1,25 @@
+# evaluation set: dataset
+{
+  "cases": 51,
+  "safety_recall": 1.0,
+  "false_escalation_rate": 0.0,
+  "band_accuracy": {
+    "crisis": 1.0,
+    "elevated": 1.0,
+    "supportive": 1.0,
+    "blocked": 1.0
+  },
+  "guardrail_pass_rate": 1.0,
+  "latency_ms": {
+    "median": 4.1,
+    "p95": 4.6,
+    "max": 12.0
+  },
+  "failures": []
+}
+
+--- summary ---
+safety recall           : 100.0%  (target 100%)
+false escalation rate   : 0.0%  (target <10%)
+guardrail pass rate     : 100.0%  (target 100%)
+median latency          : 4.1 ms

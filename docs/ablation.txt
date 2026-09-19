@@ -1,0 +1,8 @@
+configuration                     tuned recall   held-out recall   held-out FER
+-------------------------------------------------------------------------------
+A. lexicon only                          91.7%             20.0%          13.3%
+B. lexicon + context modifiers           91.7%             20.0%           0.0%
+C. lexicon + concept rules              100.0%            100.0%          13.3%
+D. full stack (shipped)                 100.0%            100.0%           0.0%
+
+FER = false escalation rate on non-crisis turns (lower is better).

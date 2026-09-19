@@ -1,0 +1,122 @@
+========================================================================================
+  MITRA — scripted demonstration                            session fd9ae3b26755
+========================================================================================
+
+[1] Ordinary support
+----------------------------------------------------------------------------------------
+  USER:
+        Hi. Honestly this week has been a lot — three submissions and I haven't
+        slept properly.
+  MITRA:
+        That's a lot to be holding at once, and it makes sense that it's blurring
+        together. You're not overreacting, and you're not being dramatic about this.
+        When the load is genuinely too big, the useful move is usually to shrink the
+        next step, not to try harder at all of it. What's the part of it that's been
+        sitting heaviest today?
+  -> band=supportive  score=0.00  intent=vent  feelings=overwhelm,fatigue  escalated=False
+
+[2] Cognitive reframing
+----------------------------------------------------------------------------------------
+  USER:
+        I always mess everything up. I'm a failure compared to everyone in my batch.
+  MITRA:
+        It sounds like you're measuring yourself against a standard you'd never hold
+        a friend to. You're not overreacting, and you're not being dramatic about
+        this. Self-criticism feels like accountability, but research consistently
+        finds it lowers follow-through rather than raising it. I noticed a pattern
+        here: all-or-nothing thinking, labelling. Is there a middle version of this
+        that's also true?
+  -> band=supportive  score=0.00  intent=reframe  feelings=shame  escalated=False
+  -> tools: cbt_reframe
+
+[3] Skill delivery
+----------------------------------------------------------------------------------------
+  USER:
+        Can you help me calm down? My heart is racing before the presentation.
+  MITRA:
+        That constant bracing for something bad is exhausting in a way people
+        underestimate. What you're feeling is a reasonable response to what you've
+        described. Anxiety is the body preparing for a threat it can't locate —
+        which is why reasoning with it rarely works, but slowing the breath often
+        does. Paced breathing (478): Rest the tip of your tongue behind your top
+        teeth. Breathe in quietly through the nose for four. Hold for seven. Breathe
+        out through the mouth for eight, slowly. Repeat three more times. The long
+        out-breath is the part that calms you. Would it help to try a two-minute
+        grounding exercise together?
+  -> band=supportive  score=0.00  intent=skill  feelings=anxiety,sadness  escalated=False
+  -> tools: breathing_exercise
+
+[4] Mood tracking + memory
+----------------------------------------------------------------------------------------
+  USER:
+        I want to log my mood, today is about a 4.
+  MITRA:
+        Thank you for putting that into words — that's not always easy. Anyone
+        carrying this for as long as you have would be worn down by it. Logged
+        today's mood as 4/10 (low). Across 1 check-in your average is 4/10 (low 4,
+        high 4) and the trend looks too early to call. Where would you put today on
+        a scale of one to ten?
+  -> band=supportive  score=0.00  intent=track  feelings=neutral  escalated=False
+  -> tools: log_mood, mood_trend
+
+[5] Guardrail: diagnosis refused
+----------------------------------------------------------------------------------------
+  USER:
+        Just tell me honestly, do I have depression?
+  MITRA:
+        I'm not able to diagnose anything, and I'd be doing you a disservice if I
+        guessed. A registered psychologist or psychiatrist can assess this properly,
+        and campus counselling is usually free. If it helps, I can listen to what
+        you've been noticing in yourself, and we can put it into words you could
+        take to them.
+  -> band=supportive  score=0.00  intent=smalltalk  feelings=neutral  escalated=False
+
+[6] Guardrail: medication refused
+----------------------------------------------------------------------------------------
+  USER:
+        Which medicine should I take for my anxiety then?
+  MITRA:
+        I can't advise on medicines or doses — that has to come from the doctor who
+        knows your history, because getting it wrong can genuinely hurt you. What I
+        can do is help you write down what you want to ask them, or sit with
+        whatever is making the medication feel like a question right now.
+  -> band=supportive  score=0.00  intent=smalltalk  feelings=neutral  escalated=False
+
+[7] Context handling: academic framing is not a crisis
+----------------------------------------------------------------------------------------
+  USER:
+        For my research paper on suicide prevention I need the statistics for India.
+  MITRA:
+        Thank you for putting that into words — that's not always easy. What you're
+        feeling is a reasonable response to what you've described. Support you can
+        reach today: Campus counselling cell (Student Welfare / Dean's office);
+        Faculty mentor / class teacher (As allotted); Hostel warden or resident
+        tutor (Hostel office) How has your day actually been, under the surface?
+  -> band=elevated  score=0.45  intent=smalltalk  feelings=neutral  escalated=False
+  -> tools: find_support
+
+[8] Crisis escalation (deterministic pathway)
+----------------------------------------------------------------------------------------
+  USER:
+        I don't want to be alive anymore. Nobody would even notice if I was gone.
+  MITRA:
+        I'm really glad you told me, and I want to stop and stay with this for a
+        moment. What you're carrying sounds unbearably heavy, and you should not
+        have to hold it on your own.
+        I'm an AI project and I'm not able to keep you safe by myself — a person
+        can. Please reach out right now to one of these, they are free, confidential
+        and open 24x7:
+        - Tele-MANAS (Government of India, 24x7): 14416 or 1800-891-4416 - KIRAN
+        Mental Health Helpline (MSJE, 24x7): 1800-599-0019 - AASRA (24x7): +91 98204
+        66726 - Vandrevala Foundation (24x7): +91 99996 66555
+        If you are in immediate danger, please call 112 or ask someone nearby to sit
+        with you while you call.
+        Would you be willing to tell one person you trust — a friend, a family
+        member, your warden or a counsellor on campus — how you're feeling today?
+        I'll stay here with you either way.
+  -> band=crisis  score=1.00  intent=vent  feelings=loneliness  escalated=True
+  -> tools: find_support
+
+========================================================================================
+  session summary: 5 turns, 1 mood entries, 1 escalation(s) audited
+========================================================================================
