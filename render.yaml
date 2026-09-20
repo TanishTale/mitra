@@ -1,0 +1,14 @@
+# Render Blueprint — optional, lets Render auto-configure the service
+# if you use "New +" -> "Blueprint" instead of manually filling the form.
+services:
+  - type: web
+    name: mitra
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: "python run.py --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: MITRA_PROVIDER
+        value: offline
+      - key: MITRA_REGION
+        value: IN
